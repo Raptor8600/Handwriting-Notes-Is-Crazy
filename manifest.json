@@ -1,7 +1,7 @@
 {
-  "name": "NoteCapture — Tutor Notes",
+  "name": "NoteCapture",
   "short_name": "NoteCapture",
-  "description": "Photograph handwritten tutor notes and transcribe them with AI",
+  "description": "Capture handwritten notes and transcribe them instantly with AI",
   "start_url": "/Handwriting-Notes-Is-Crazy/",
   "display": "standalone",
   "background_color": "#0a0a0a",

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>NoteCapture — Tutor Notes</title>
+  <title>NoteCapture</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,7 +212,7 @@
   <header>
     <div>
       <h1>NoteCapture</h1>
-      <div class="subtitle">Tutor Notes · AI-Powered</div>
+      <div class="subtitle">Capture. Transcribe. Summarize.</div>
     </div>
     <div class="header-right">
       <button class="icon-btn" id="settings-btn">
@@ -850,7 +850,7 @@ if ('serviceWorker' in navigator) {
 // INIT
 // ══════════════════════════════════════════════════════
 load();
-if (!Object.keys(S.batches).length) createBatch("Today's Notes");
+if (!Object.keys(S.batches).length) createBatch("Today's Batch");
 refreshSelects();
 renderBanner();
 
