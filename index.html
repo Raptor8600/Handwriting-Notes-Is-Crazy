@@ -359,7 +359,7 @@
 
     <div class="setting-row" style="margin-top:8px;">
       <label>Your Name (optional)</label>
-      <input type="text" id="tutor-name-input" placeholder="e.g. Ms. Johnson" />
+      <input type="text" id="tutor-name-input" placeholder="e.g. Alex" />
     </div>
 
     <button class="btn btn-primary" id="save-settings-btn" style="margin-top:8px;">Save Settings</button>
@@ -558,7 +558,7 @@ async function geminiSummarize(notes) {
   const combined = notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${S.settings.geminiKey}`;
   const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
-    contents:[{ parts:[{ text:`You are helping a lead tutor review notes from other tutors to prepare for the next session.\n\nCreate a clear, actionable summary covering:\n1. Key topics and concepts covered\n2. Student struggles or areas needing attention\n3. Action items / follow-ups for tomorrow\n4. Patterns across multiple notes\n\nUse clear section headers. Be concise but complete.\n\nNOTES:\n${combined}` }]}],
+    contents:[{ parts:[{ text:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.\n\nNOTES:\n${combined}` }]}],
     generationConfig:{ maxOutputTokens:1200 }
   })});
   if (!res.ok) { const e = await res.json().catch(()=>({})); if(res.status===429) throw new Error('Gemini rate-limited. Wait a moment.'); throw new Error(e.error?.message||`Gemini error ${res.status}`); }
@@ -587,7 +587,7 @@ async function anthropicSummarize(notes) {
   const combined = notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers:{'Content-Type':'application/json','x-api-key':S.settings.anthropicKey,'anthropic-version':'2023-06-01'}, body: JSON.stringify({
     model:'claude-sonnet-4-20250514', max_tokens:1200,
-    messages:[{ role:'user', content:`You are helping a lead tutor review notes from other tutors. Create a clear, actionable summary covering: key topics, student struggles, action items for tomorrow, and patterns. Use section headers.\n\nNOTES:\n${combined}` }]
+    messages:[{ role:'user', content:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.\n\nNOTES:\n${combined}` }]
   })});
   if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||`Claude error ${res.status}`); }
   const data = await res.json();
