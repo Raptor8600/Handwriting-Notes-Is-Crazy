@@ -85,53 +85,7 @@ The daily quota resets at **midnight Pacific Time** (3am Eastern / 8am UK). The 
 
 ---
 
-## Deploying to GitHub Pages
-
-### Step 1 — Create a GitHub repository
-
-1. Go to [github.com](https://github.com) and sign in (or create a free account)
-2. Click the **"+"** icon → **"New repository"**
-3. Name it exactly: `Handwriting-Notes-Is-Crazy`
-4. Set it to **Public**
-5. Click **"Create repository"**
-
----
-
-### Step 2 — Upload the app files
-
-In your new repository, click **"Add file" → "Upload files"** and upload all of these:
-
-| File | Required |
-|---|---|
-| `index.html` | ✅ Yes |
-| `manifest.json` | ✅ Yes |
-| `sw.js` | ✅ Yes |
-| `icon-192.png` | ✅ Yes (see note below) |
-| `icon-512.png` | ✅ Yes (see note below) |
-
-> **Icons:** You need two square PNG images — one at 192×192px and one at 512×512px. These become the home screen icon. Any image works: a simple colored square, your school logo, anything. Rename the files exactly `icon-192.png` and `icon-512.png` before uploading.
-
-Commit the files with the green **"Commit changes"** button.
-
----
-
-### Step 3 — Enable GitHub Pages
-
-1. In your repository, click **Settings** (the tab along the top)
-2. Scroll down the left sidebar and click **Pages**
-3. Under "Source", select **Deploy from a branch**
-4. Set Branch to **main** and folder to **/ (root)**
-5. Click **Save**
-
-GitHub will show a banner: *"Your site is being deployed."* Wait about 60 seconds, then your app will be live at:
-
-```
-https://YOUR-USERNAME.github.io/Handwriting-Notes-Is-Crazy/
-```
-
----
-
-### Step 4 — Add to iPhone Home Screen
+### Add to iPhone Home Screen
 
 > ⚠️ This **must** be done in **Safari**. Chrome and Firefox on iOS cannot install PWAs.
 
