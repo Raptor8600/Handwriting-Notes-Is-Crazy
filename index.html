@@ -201,6 +201,36 @@
     .toast.success { border-color: var(--success); color: var(--success); }
     .toast.error { border-color: var(--danger); color: var(--danger); }
 
+    /* Image source buttons */
+    .img-source-row { display:flex; gap:8px; margin-bottom:12px; }
+    .img-src-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 12px; border-radius:10px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all 0.15s; }
+    .img-src-btn.active { border-color:var(--accent); background:rgba(232,201,126,0.1); color:var(--accent); }
+    .img-src-btn:active { opacity:0.8; }
+
+    /* OCR mode toggle */
+    .ocr-mode-row { display:flex; align-items:center; gap:10px; margin:12px 0 0; flex-wrap:wrap; }
+    .ocr-mode-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); white-space:nowrap; }
+    .ocr-toggle-group { display:flex; background:var(--surface2); border:1px solid var(--border); border-radius:10px; overflow:hidden; flex:1; }
+    .ocr-toggle { flex:1; padding:7px 6px; border:none; background:transparent; color:var(--text-dim); font-family:'DM Mono',monospace; font-size:11px; cursor:pointer; transition:all 0.15s; text-align:center; white-space:nowrap; }
+    .ocr-toggle.active { background:var(--accent); color:#0a0a0a; font-weight:500; }
+
+    /* Multi-batch summary selector */
+    .sum-batch-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .sum-sel-btn { font-family:'DM Mono',monospace; font-size:11px; padding:4px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); cursor:pointer; transition:all 0.15s; }
+    .sum-sel-btn:active { opacity:0.7; }
+    #summary-batch-chips { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:4px; min-height:34px; }
+    .batch-chip { display:flex; align-items:center; gap:5px; padding:5px 11px; border-radius:20px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all 0.15s; user-select:none; }
+    .batch-chip.selected { border-color:var(--accent); background:rgba(232,201,126,0.12); color:var(--accent); }
+    .batch-chip .chip-check { width:14px; height:14px; border-radius:4px; border:1.5px solid currentColor; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.15s; }
+    .batch-chip.selected .chip-check { background:var(--accent); border-color:var(--accent); }
+    .batch-chip.selected .chip-check::after { content:'✓'; font-size:9px; color:#0a0a0a; font-weight:700; line-height:1; }
+    .batch-chip-empty { font-size:12px; color:var(--text-dim); padding:6px 0; font-style:italic; }
+
+    /* Move batch list items */
+    .move-batch-item { padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Mono',monospace; font-size:13px; cursor:pointer; transition:all 0.15s; text-align:left; }
+    .move-batch-item:hover { border-color:var(--accent); color:var(--accent); }
+    .move-batch-item.current { opacity:0.4; cursor:not-allowed; }
+
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -246,12 +276,35 @@
         <button id="new-batch-btn" class="batch-new-btn">+ New</button>
       </div>
       <div class="capture-inner">
+        <!-- Image source buttons -->
+        <div class="img-source-row">
+          <button class="img-src-btn active" id="src-camera-btn" onclick="triggerCamera()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
+            Camera
+          </button>
+          <button class="img-src-btn" id="src-gallery-btn" onclick="triggerGallery()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            Gallery
+          </button>
+        </div>
         <div class="camera-area" id="camera-area">
           <div class="cam-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></div>
-          <div class="cam-hint">Tap to photograph<br/>handwritten notes</div>
+          <div class="cam-hint">Tap Camera or Gallery above,<br/>then tap here to change image</div>
           <div class="cam-overlay"></div>
         </div>
         <input type="file" id="camera-input" accept="image/*" capture="environment" />
+        <input type="file" id="gallery-input" accept="image/*" />
+
+        <!-- OCR Mode toggle -->
+        <div class="ocr-mode-row">
+          <span class="ocr-mode-label">Detect text type:</span>
+          <div class="ocr-toggle-group">
+            <button class="ocr-toggle active" id="ocr-handwritten" onclick="setOcrMode('handwritten')">Handwritten</button>
+            <button class="ocr-toggle" id="ocr-printed" onclick="setOcrMode('printed')">Printed / Typed</button>
+            <button class="ocr-toggle" id="ocr-both" onclick="setOcrMode('both')">Both</button>
+          </div>
+        </div>
+
         <div class="action-row">
           <button class="btn btn-primary" id="transcribe-btn" disabled>✦ Extract Text</button>
           <button class="btn btn-secondary" id="clear-btn" disabled>Clear</button>
@@ -282,20 +335,27 @@
 
     <!-- SUMMARY -->
     <div id="summary-panel" class="panel">
-      <div class="batch-bar">
-        <span class="batch-label">Batch</span>
-        <select id="batch-select-summary" class="batch-select"></select>
+      <div style="padding:14px 14px 0;">
+        <div class="sum-batch-header">
+          <span class="batch-label">Batches to summarize</span>
+          <div style="display:flex;gap:6px;">
+            <button class="sum-sel-btn" onclick="selectAllBatches()">All</button>
+            <button class="sum-sel-btn" onclick="selectNoBatches()">None</button>
+          </div>
+        </div>
+        <div id="summary-batch-chips"></div>
       </div>
-      <div style="padding:16px;">
+      <div style="padding:12px 16px 16px;">
         <div class="stats-row">
           <div class="stat-card"><div class="stat-num" id="stat-notes">0</div><div class="stat-label">Notes</div></div>
           <div class="stat-card"><div class="stat-num" id="stat-words">0</div><div class="stat-label">Words</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-batches">0</div><div class="stat-label">Batches</div></div>
         </div>
         <div class="summary-header">
           <div class="summary-title">AI Summary</div>
           <span class="badge" id="summary-badge">Not generated</span>
         </div>
-        <div class="summary-box empty" id="summary-box">Capture notes first, then generate a summary</div>
+        <div class="summary-box empty" id="summary-box">Select batches above, then generate a summary</div>
         <div class="summary-actions">
           <button class="btn btn-primary" id="generate-summary-btn" style="flex:1;">✦ Generate Summary</button>
           <button class="btn btn-secondary" id="copy-summary-btn" disabled style="flex:none;padding:14px 16px;">
@@ -373,6 +433,17 @@
   </div>
 </div>
 
+<!-- MOVE NOTE MODAL -->
+<div class="modal-backdrop" id="move-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Move Note</h2>
+    <div class="modal-subtitle">Select a destination batch for this note.</div>
+    <div id="move-batch-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+    <button class="btn btn-secondary" id="close-move-btn">Cancel</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -390,6 +461,7 @@ let S = {
   batches: {},
   activeBatchId: null,
   capturedImage: null,
+  ocrMode: 'handwritten',
   settings: { provider: 'gemini', geminiKey: '', anthropicKey: '', tutorName: '' },
   usage: {
     gemini: { date: '', count: 0, minuteBucket: {} },
@@ -537,16 +609,17 @@ function selectProvider(p) {
 // ══════════════════════════════════════════════════════
 // API CALLS
 // ══════════════════════════════════════════════════════
-async function geminiTranscribe(b64, mime) {
+async function geminiTranscribe(b64, mime, ocrMode='handwritten') {
   if (!S.settings.geminiKey) throw new Error('No Gemini key — add it in Settings.');
   if (geminiPerMin() >= GEMINI_RPM) throw new Error(`Per-minute limit reached (${GEMINI_RPM}/min). Wait a moment.`);
   if (geminiDaily()  >= GEMINI_RPD) throw new Error(`Daily limit reached (${GEMINI_RPD}/day). Resets at midnight.`);
 
+  const prompt = buildTranscribePrompt(ocrMode);
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${S.settings.geminiKey}`;
   const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
     contents:[{ parts:[
       { inline_data:{ mime_type: mime, data: b64 } },
-      { text:`Transcribe ALL handwritten text from this image exactly as written. Preserve line breaks, lists, headings, abbreviations, math. Mark unclear text as [unclear] and crossed-out text as [crossed out: ...]. Output ONLY the transcribed text, no preamble.` }
+      { text: prompt }
     ]}],
     generationConfig:{ maxOutputTokens:1500 }
   })});
@@ -556,16 +629,19 @@ async function geminiTranscribe(b64, mime) {
   return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 }
 
-async function geminiSummarize(notes) {
+async function geminiSummarize(notes, isMultiBatch=false) {
   if (!S.settings.geminiKey) throw new Error('No Gemini key — add it in Settings.');
   if (geminiPerMin() >= GEMINI_RPM) throw new Error(`Per-minute limit reached (${GEMINI_RPM}/min). Wait a moment.`);
   if (geminiDaily()  >= GEMINI_RPD) throw new Error(`Daily limit reached (${GEMINI_RPD}/day). Resets at midnight.`);
 
-  const combined = notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
+  const combined = isMultiBatch
+    ? notes.map((n,i)=>`--- Note ${i+1} [Batch: ${n._batchName}] ---\n${n.text}`).join('\n\n')
+    : notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
+  const batchInstruction = isMultiBatch ? ' Notes come from multiple batches (labeled). Highlight any patterns or differences across batches.' : '';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${S.settings.geminiKey}`;
   const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
-    contents:[{ parts:[{ text:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.\n\nNOTES:\n${combined}` }]}],
-    generationConfig:{ maxOutputTokens:1200 }
+    contents:[{ parts:[{ text:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.${batchInstruction}\n\nNOTES:\n${combined}` }]}],
+    generationConfig:{ maxOutputTokens:1500 }
   })});
   if (!res.ok) { const e = await res.json().catch(()=>({})); if(res.status===429) throw new Error('Gemini rate-limited. Wait a moment.'); throw new Error(e.error?.message||`Gemini error ${res.status}`); }
   const data = await res.json();
@@ -573,13 +649,14 @@ async function geminiSummarize(notes) {
   return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 }
 
-async function anthropicTranscribe(b64, mime) {
+async function anthropicTranscribe(b64, mime, ocrMode='handwritten') {
   if (!S.settings.anthropicKey) throw new Error('No Anthropic key — add it in Settings.');
+  const prompt = buildTranscribePrompt(ocrMode);
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers:{'Content-Type':'application/json','x-api-key':S.settings.anthropicKey,'anthropic-version':'2023-06-01'}, body: JSON.stringify({
     model:'claude-sonnet-4-20250514', max_tokens:1500,
     messages:[{ role:'user', content:[
       { type:'image', source:{ type:'base64', media_type:mime, data:b64 }},
-      { type:'text',  text:'Transcribe ALL handwritten text from this image exactly as written. Preserve structure, line breaks, lists, headings, abbreviations, math. Mark unclear text as [unclear] and crossed-out text as [crossed out: ...]. Output ONLY the transcribed text with no preamble.' }
+      { type:'text',  text: prompt }
     ]}]
   })});
   if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||`Claude error ${res.status}`); }
@@ -588,12 +665,15 @@ async function anthropicTranscribe(b64, mime) {
   return data.content?.[0]?.text || '';
 }
 
-async function anthropicSummarize(notes) {
+async function anthropicSummarize(notes, isMultiBatch=false) {
   if (!S.settings.anthropicKey) throw new Error('No Anthropic key — add it in Settings.');
-  const combined = notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
+  const combined = isMultiBatch
+    ? notes.map((n,i)=>`--- Note ${i+1} [Batch: ${n._batchName}] ---\n${n.text}`).join('\n\n')
+    : notes.map((n,i)=>`--- Note ${i+1} ---\n${n.text}`).join('\n\n');
+  const batchInstruction = isMultiBatch ? ' Notes come from multiple batches (labeled). Highlight any patterns or differences across batches.' : '';
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers:{'Content-Type':'application/json','x-api-key':S.settings.anthropicKey,'anthropic-version':'2023-06-01'}, body: JSON.stringify({
-    model:'claude-sonnet-4-20250514', max_tokens:1200,
-    messages:[{ role:'user', content:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.\n\nNOTES:\n${combined}` }]
+    model:'claude-sonnet-4-20250514', max_tokens:1500,
+    messages:[{ role:'user', content:`You are an AI assistant helping review and summarize handwritten notes. Create a clear, actionable summary covering: key topics, important details, action items, and patterns. Use clear section headers. Be concise but complete.${batchInstruction}\n\nNOTES:\n${combined}` }]
   })});
   if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||`Claude error ${res.status}`); }
   const data = await res.json();
@@ -601,8 +681,14 @@ async function anthropicSummarize(notes) {
   return data.content?.[0]?.text || '';
 }
 
-function transcribeImage(b64, mime) { return S.settings.provider === 'gemini' ? geminiTranscribe(b64, mime) : anthropicTranscribe(b64, mime); }
-function summarizeNotes(notes)       { return S.settings.provider === 'gemini' ? geminiSummarize(notes)    : anthropicSummarize(notes); }
+function buildTranscribePrompt(mode) {
+  if (mode === 'handwritten') return `Transcribe ALL handwritten text from this image exactly as written. Preserve line breaks, lists, headings, abbreviations, math. Mark unclear text as [unclear] and crossed-out text as [crossed out: ...]. Output ONLY the transcribed text, no preamble.`;
+  if (mode === 'printed')     return `Extract ALL printed or typed text from this image exactly as it appears. Preserve formatting, line breaks, lists, headings, numbers, and punctuation. Ignore any handwritten annotations. Output ONLY the extracted text, no preamble.`;
+  /* both */                  return `Transcribe ALL text from this image — both handwritten and printed/typed — exactly as it appears. Label each section: prefix handwritten sections with [Handwritten] and printed/typed sections with [Printed]. Preserve formatting, line breaks, and structure. Mark unclear text as [unclear]. Output ONLY the transcribed text, no preamble.`;
+}
+
+function transcribeImage(b64, mime, ocrMode) { return S.settings.provider === 'gemini' ? geminiTranscribe(b64, mime, ocrMode) : anthropicTranscribe(b64, mime, ocrMode); }
+function summarizeNotes(notes, isMultiBatch=false) { return S.settings.provider === 'gemini' ? geminiSummarize(notes, isMultiBatch) : anthropicSummarize(notes, isMultiBatch); }
 
 // ══════════════════════════════════════════════════════
 // BATCH
@@ -616,11 +702,14 @@ function getBatchList() { return Object.values(S.batches).sort((a,b)=>new Date(b
 
 function refreshSelects() {
   const list = getBatchList();
-  ['batch-select','batch-select-notes','batch-select-summary'].forEach(id => {
+  ['batch-select','batch-select-notes'].forEach(id => {
     const el = document.getElementById(id);
     el.innerHTML = list.length === 0 ? '<option value="">— No batches —</option>'
       : list.map(b=>`<option value="${b.id}"${b.id===S.activeBatchId?' selected':''}>${b.name}</option>`).join('');
   });
+  // Seed summary selection: auto-select active batch if nothing selected yet
+  if (_selectedSummaryBids.size === 0 && S.activeBatchId) _selectedSummaryBids.add(S.activeBatchId);
+  renderSummaryChips();
 }
 
 // ══════════════════════════════════════════════════════
@@ -653,6 +742,7 @@ function renderNotes() {
         <div class="note-body-text">${escHtml(n.text)}</div>
         <div class="note-actions">
           <button class="btn btn-secondary" onclick="copyNote('${n.id}','${bid}')">Copy</button>
+          <button class="btn btn-secondary" onclick="openMoveModal('${n.id}','${bid}')">Move</button>
           <button class="btn btn-danger" onclick="deleteNote('${n.id}','${bid}')">Delete</button>
         </div>
       </div></div>
@@ -672,18 +762,121 @@ function deleteNote(nid, bid) {
 }
 
 // ══════════════════════════════════════════════════════
+// MOVE NOTE
+// ══════════════════════════════════════════════════════
+let _moveNote = null; // { nid, bid }
+function openMoveModal(nid, bid) {
+  _moveNote = { nid, bid };
+  const batches = getBatchList();
+  const list = document.getElementById('move-batch-list');
+  list.innerHTML = batches.map(b => {
+    const isCurrent = b.id === bid;
+    return `<button class="move-batch-item${isCurrent?' current':''}" onclick="${isCurrent?'':'doMove(\''+b.id+'\')'}">${b.name}${isCurrent?' <span style="font-size:10px;opacity:0.6;">(current)</span>':''}</button>`;
+  }).join('');
+  document.getElementById('move-modal').classList.add('active');
+}
+function doMove(destBid) {
+  if (!_moveNote) return;
+  const { nid, bid: srcBid } = _moveNote;
+  const src = S.batches[srcBid], dest = S.batches[destBid];
+  if (!src || !dest) return;
+  const idx = src.notes.findIndex(n=>n.id===nid);
+  if (idx === -1) return;
+  const [note] = src.notes.splice(idx, 1);
+  dest.notes.push(note);
+  src.summary = null; dest.summary = null;
+  save(); renderNotes(); updateSummary();
+  document.getElementById('move-modal').classList.remove('active');
+  toast(`Moved to "${dest.name}"`, 'success');
+  _moveNote = null;
+}
+document.getElementById('close-move-btn').addEventListener('click', ()=>{ document.getElementById('move-modal').classList.remove('active'); _moveNote=null; });
+document.getElementById('move-modal').addEventListener('click', e=>{ if(e.target===document.getElementById('move-modal')){ document.getElementById('move-modal').classList.remove('active'); _moveNote=null; } });
+
+// ══════════════════════════════════════════════════════
 // SUMMARY
 // ══════════════════════════════════════════════════════
-function updateSummary() {
-  const bid = document.getElementById('batch-select-summary').value || S.activeBatchId;
-  const b = bid ? S.batches[bid] : null;
-  const notes = b ? b.notes : [];
-  document.getElementById('stat-notes').textContent = notes.length;
-  document.getElementById('stat-words').textContent = notes.reduce((s,n)=>s+countWords(n.text),0);
-  const box = document.getElementById('summary-box'), badge = document.getElementById('summary-badge'), copy = document.getElementById('copy-summary-btn');
-  if (b?.summary) { box.className='summary-box'; box.textContent=b.summary; badge.textContent='Ready'; badge.className='badge accent'; copy.disabled=false; }
-  else { box.className='summary-box empty'; box.textContent=notes.length>0?'Hit "Generate Summary" to summarize all notes':'Capture notes first, then generate a summary'; badge.textContent='Not generated'; badge.className='badge'; copy.disabled=true; }
+let _selectedSummaryBids = new Set(); // batch ids selected for summary
+let _multiSummary = null;             // last generated multi-batch summary text
+
+function getSelectedBatches() {
+  return getBatchList().filter(b => _selectedSummaryBids.has(b.id));
 }
+
+function renderSummaryChips() {
+  const list = getBatchList();
+  const container = document.getElementById('summary-batch-chips');
+  if (!list.length) {
+    container.innerHTML = `<span class="batch-chip-empty">No batches yet — capture some notes first</span>`;
+    updateSummaryStats(); return;
+  }
+  container.innerHTML = list.map(b => {
+    const sel = _selectedSummaryBids.has(b.id);
+    return `<button class="batch-chip${sel?' selected':''}" onclick="toggleSummaryBatch('${b.id}')">
+      <span class="chip-check"></span>
+      <span>${b.name} <span style="opacity:0.55;font-size:10px;">(${b.notes.length})</span></span>
+    </button>`;
+  }).join('');
+  updateSummaryStats();
+}
+
+function toggleSummaryBatch(bid) {
+  if (_selectedSummaryBids.has(bid)) _selectedSummaryBids.delete(bid);
+  else _selectedSummaryBids.add(bid);
+  _multiSummary = null;
+  renderSummaryChips();
+  updateSummaryDisplay();
+}
+
+function selectAllBatches() {
+  getBatchList().forEach(b => _selectedSummaryBids.add(b.id));
+  _multiSummary = null; renderSummaryChips(); updateSummaryDisplay();
+}
+function selectNoBatches() {
+  _selectedSummaryBids.clear();
+  _multiSummary = null; renderSummaryChips(); updateSummaryDisplay();
+}
+
+function updateSummaryStats() {
+  const selected = getSelectedBatches();
+  const notes = selected.flatMap(b => b.notes);
+  document.getElementById('stat-notes').textContent   = notes.length;
+  document.getElementById('stat-words').textContent   = notes.reduce((s,n)=>s+countWords(n.text),0);
+  document.getElementById('stat-batches').textContent = selected.length;
+}
+
+function updateSummaryDisplay() {
+  updateSummaryStats();
+  const box   = document.getElementById('summary-box');
+  const badge = document.getElementById('summary-badge');
+  const copy  = document.getElementById('copy-summary-btn');
+  const selected = getSelectedBatches();
+
+  // Single batch selected: show its cached summary if present
+  if (selected.length === 1 && selected[0].summary && !_multiSummary) {
+    box.className = 'summary-box'; box.textContent = selected[0].summary;
+    badge.textContent = 'Ready'; badge.className = 'badge accent'; copy.disabled = false;
+  } else if (_multiSummary) {
+    box.className = 'summary-box'; box.textContent = _multiSummary;
+    badge.textContent = 'Ready'; badge.className = 'badge accent'; copy.disabled = false;
+  } else {
+    copy.disabled = true; badge.textContent = 'Not generated'; badge.className = 'badge';
+    const totalNotes = selected.flatMap(b=>b.notes).length;
+    if (!selected.length) {
+      box.className = 'summary-box empty'; box.textContent = 'Select one or more batches above to summarize';
+    } else if (!totalNotes) {
+      box.className = 'summary-box empty'; box.textContent = 'Selected batches have no notes yet';
+    } else {
+      box.className = 'summary-box empty';
+      box.textContent = selected.length === 1
+        ? 'Hit "Generate Summary" to summarize this batch'
+        : `Hit "Generate Summary" to summarize ${selected.length} batches together`;
+    }
+  }
+}
+
+// Legacy alias called from tab switch etc.
+function updateSummary() { renderSummaryChips(); updateSummaryDisplay(); }
 
 // ══════════════════════════════════════════════════════
 // TOAST + PROCESSING
@@ -697,17 +890,31 @@ function showProc(msg) { document.getElementById('processing-text').textContent=
 function hideProc()    { document.getElementById('processing-overlay').classList.remove('active'); }
 
 // ══════════════════════════════════════════════════════
-// CAMERA
+// OCR MODE
 // ══════════════════════════════════════════════════════
-function resetCamera() {
-  const a = document.getElementById('camera-area');
-  a.classList.remove('has-image');
-  a.innerHTML = `<div class="cam-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></div><div class="cam-hint">Tap to photograph<br/>handwritten notes</div><div class="cam-overlay"></div>`;
+function setOcrMode(mode) {
+  S.ocrMode = mode;
+  ['handwritten','printed','both'].forEach(m => {
+    document.getElementById('ocr-'+m).classList.toggle('active', m === mode);
+  });
 }
 
-document.getElementById('camera-area').addEventListener('click', ()=>document.getElementById('camera-input').click());
-document.getElementById('camera-input').addEventListener('change', e=>{
-  const f = e.target.files[0]; if(!f) return;
+// ══════════════════════════════════════════════════════
+// CAMERA / GALLERY
+// ══════════════════════════════════════════════════════
+function triggerCamera() {
+  document.getElementById('src-camera-btn').classList.add('active');
+  document.getElementById('src-gallery-btn').classList.remove('active');
+  document.getElementById('camera-input').click();
+}
+function triggerGallery() {
+  document.getElementById('src-gallery-btn').classList.add('active');
+  document.getElementById('src-camera-btn').classList.remove('active');
+  document.getElementById('gallery-input').click();
+}
+
+function handleImageFile(f) {
+  if (!f) return;
   const r = new FileReader();
   r.onload = ev => {
     S.capturedImage = { dataURL: ev.target.result, mimeType: f.type };
@@ -717,8 +924,24 @@ document.getElementById('camera-input').addEventListener('change', e=>{
     document.getElementById('transcribe-btn').disabled = false;
     document.getElementById('clear-btn').disabled = false;
   };
-  r.readAsDataURL(f); e.target.value='';
+  r.readAsDataURL(f);
+}
+
+document.getElementById('camera-area').addEventListener('click', ()=>{
+  if (document.getElementById('src-gallery-btn').classList.contains('active')) {
+    document.getElementById('gallery-input').click();
+  } else {
+    document.getElementById('camera-input').click();
+  }
 });
+document.getElementById('camera-input').addEventListener('change', e=>{ handleImageFile(e.target.files[0]); e.target.value=''; });
+document.getElementById('gallery-input').addEventListener('change', e=>{ handleImageFile(e.target.files[0]); e.target.value=''; });
+
+function resetCamera() {
+  const a = document.getElementById('camera-area');
+  a.classList.remove('has-image');
+  a.innerHTML = `<div class="cam-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></div><div class="cam-hint">Tap Camera or Gallery above,<br/>then tap here to change image</div><div class="cam-overlay"></div>`;
+}
 
 document.getElementById('transcribe-btn').addEventListener('click', async ()=>{
   if (!S.capturedImage) return;
@@ -726,14 +949,14 @@ document.getElementById('transcribe-btn').addEventListener('click', async ()=>{
   if (p==='gemini' && !S.settings.geminiKey)       { toast('Add Gemini key in Settings','error'); return; }
   if (p==='anthropic' && !S.settings.anthropicKey) { toast('Add Anthropic key in Settings','error'); return; }
   if (!S.activeBatchId) { createBatch(); refreshSelects(); }
-  showProc('Reading handwriting…');
+  showProc('Reading text…');
   try {
     const { dataURL, mimeType } = S.capturedImage;
-    const text = await transcribeImage(dataURL.split(',')[1], mimeType);
+    const text = await transcribeImage(dataURL.split(',')[1], mimeType, S.ocrMode);
     document.getElementById('extracted-text').value = text;
     document.getElementById('text-section').style.display = 'block';
     document.getElementById('word-count').textContent = countWords(text)+' words';
-    document.getElementById('note-meta').textContent = `Captured ${new Date().toLocaleTimeString()} via ${p==='gemini'?'Gemini 2.5 Flash':'Claude Sonnet'}`;
+    document.getElementById('note-meta').textContent = `Captured ${new Date().toLocaleTimeString()} via ${p==='gemini'?'Gemini 2.5 Flash':'Claude Sonnet'} · ${S.ocrMode} mode`;
     hideProc();
   } catch(err) { hideProc(); toast(err.message,'error'); }
 });
@@ -769,10 +992,10 @@ document.getElementById('new-batch-btn').addEventListener('click', ()=>{
   createBatch(n.trim()||''); refreshSelects(); toast('New batch created','success');
 });
 
-['batch-select','batch-select-notes','batch-select-summary'].forEach(sid=>{
+['batch-select','batch-select-notes'].forEach(sid=>{
   document.getElementById(sid).addEventListener('change', e=>{
     S.activeBatchId = e.target.value; save();
-    ['batch-select','batch-select-notes','batch-select-summary'].forEach(id=>{
+    ['batch-select','batch-select-notes'].forEach(id=>{
       const el=document.getElementById(id); if(el!==e.target) el.value=e.target.value;
     });
     renderNotes(); updateSummary();
@@ -793,23 +1016,34 @@ document.getElementById('delete-batch-btn').addEventListener('click', ()=>{
 // SUMMARY EVENTS
 // ══════════════════════════════════════════════════════
 document.getElementById('generate-summary-btn').addEventListener('click', async ()=>{
-  const bid = document.getElementById('batch-select-summary').value || S.activeBatchId;
-  const b = bid ? S.batches[bid] : null;
-  if (!b||!b.notes.length) { toast('No notes to summarize','error'); return; }
+  const selected = getSelectedBatches();
+  if (!selected.length) { toast('Select at least one batch','error'); return; }
+  const allNotes = selected.flatMap(b => b.notes);
+  if (!allNotes.length) { toast('No notes in selected batches','error'); return; }
   const p = S.settings.provider;
   if (p==='gemini' && !S.settings.geminiKey)       { toast('Add Gemini key in Settings','error'); return; }
   if (p==='anthropic' && !S.settings.anthropicKey) { toast('Add Anthropic key in Settings','error'); return; }
-  showProc('Summarizing notes…');
+
+  const label = selected.length === 1 ? `"${selected[0].name}"` : `${selected.length} batches`;
+  showProc(`Summarizing ${label}…`);
   try {
-    b.summary = await summarizeNotes(b.notes); save(); updateSummary(); hideProc(); toast('Summary ready!','success');
+    // Build notes with batch labels when spanning multiple batches
+    const notesForSummarize = selected.length === 1
+      ? allNotes
+      : selected.flatMap(b => b.notes.map(n => ({ ...n, _batchName: b.name })));
+    const result = await summarizeNotes(notesForSummarize, selected.length > 1);
+    // Cache on single batch; for multi store in _multiSummary
+    if (selected.length === 1) { selected[0].summary = result; save(); }
+    _multiSummary = result;
+    updateSummaryDisplay(); hideProc();
+    toast('Summary ready!', 'success');
   } catch(err) { hideProc(); toast(err.message,'error'); }
 });
 
 document.getElementById('copy-summary-btn').addEventListener('click', ()=>{
-  const bid = document.getElementById('batch-select-summary').value || S.activeBatchId;
-  const b = bid ? S.batches[bid] : null;
-  if (!b?.summary) return;
-  navigator.clipboard.writeText(b.summary).then(()=>toast('Summary copied!','success')).catch(()=>toast('Copy failed','error'));
+  const text = _multiSummary || getSelectedBatches()[0]?.summary;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(()=>toast('Summary copied!','success')).catch(()=>toast('Copy failed','error'));
 });
 
 // ══════════════════════════════════════════════════════
