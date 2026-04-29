@@ -1081,10 +1081,32 @@ document.querySelectorAll('.tab').forEach(tab=>{
 });
 
 // ══════════════════════════════════════════════════════
-// SERVICE WORKER
+// SERVICE WORKER — auto-reload on update
 // ══════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', ()=>navigator.serviceWorker.register('/Handwriting-Notes-Is-Crazy/sw.js').catch(()=>{}));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/Handwriting-Notes-Is-Crazy/sw.js')
+      .then(reg => {
+        // When a new SW is found, it installs in the background.
+        // Once it activates (takes control), reload so the new code is used.
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            // 'activated' + controller means the new SW is now in charge
+            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+              window.location.reload();
+            }
+          });
+        });
+      })
+      .catch(() => {});
+
+    // If the SW controlling the page changes (e.g. skipWaiting fired from
+    // another tab), reload this tab too
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+  });
 }
 
 // ══════════════════════════════════════════════════════
