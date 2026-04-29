@@ -99,23 +99,6 @@ The app icon will appear on your home screen and open full-screen like a native 
 
 ---
 
-## Updating the App
-
-When you get a new version of `index.html`:
-
-1. Open your GitHub repository
-2. Click on `index.html` in the file list
-3. Click the **pencil (edit) icon**
-4. Select all the text and replace it with the new file contents (or use "Upload files" to overwrite)
-5. Click **Commit changes**
-
-After pushing, **force-refresh on your iPhone** to clear the service worker cache:
-- Close NoteCapture from the app switcher
-- Go to Settings → Safari → Advanced → Website Data → find your GitHub Pages URL → delete it
-- Reopen the app from your home screen
-
----
-
 ## Using the App
 
 ### Capturing Notes
