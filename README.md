@@ -1,6 +1,6 @@
-# NoteCapture — Tutor Notes PWA
+# NoteCapture — Notes PWA
 
-A Progressive Web App for tutors to photograph handwritten notes, transcribe them with AI, and generate summaries — organized into batches so nothing overlaps.
+A Progressive Web App to photograph handwritten notes, transcribe them with AI, and generate summaries — organized into batches so nothing overlaps.
 
 ---
 
