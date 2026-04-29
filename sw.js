@@ -1,5 +1,9 @@
 const CACHE = 'notecapture-v2';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const ASSETS = [
+  '/Handwriting-Notes-Is-Crazy/',
+  '/Handwriting-Notes-Is-Crazy/index.html',
+  '/Handwriting-Notes-Is-Crazy/manifest.json'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
